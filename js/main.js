@@ -75,13 +75,15 @@
       const progress = rawProgress * rawProgress * (3 - 2 * rawProgress);
       const fontSize = Number.parseFloat(getComputedStyle(transformWord).fontSize);
       const originalLeft = maximumRect.left + Number.parseFloat(getComputedStyle(maximum).paddingLeft);
-      const scaleX = 1 + progress * .12;
-      const estimatedTracking = fontSize * .16 * 10 * progress;
-      const availableShift = Math.max(0, window.innerWidth - originalLeft - transformWord.offsetWidth * scaleX - estimatedTracking - window.innerWidth * .06);
-      const desiredShift = window.innerWidth > 700 ? window.innerWidth * .31 : window.innerWidth * .015;
+      const compactLayout = window.innerWidth <= 700;
+      const scaleX = 1 + progress * (compactLayout ? .05 : .12);
+      const tracking = compactLayout ? .09 : .16;
+      const estimatedTracking = fontSize * tracking * 10 * progress;
+      const availableShift = Math.max(0, window.innerWidth - originalLeft - transformWord.offsetWidth * scaleX - estimatedTracking - window.innerWidth * (compactLayout ? .14 : .06));
+      const desiredShift = compactLayout ? 0 : window.innerWidth * .31;
       const shift = Math.min(desiredShift, availableShift) * progress;
       transformWord.style.transform = `translate3d(${shift.toFixed(2)}px, ${(-fontSize * .075 * progress).toFixed(2)}px, 0) scaleX(${scaleX.toFixed(3)})`;
-      transformWord.style.letterSpacing = `${(.16 * progress).toFixed(3)}em`;
+      transformWord.style.letterSpacing = `${(tracking * progress).toFixed(3)}em`;
       transformLetters.forEach((letter, index) => {
         const offset = letterOffsets[index] || 0;
         letter.style.transform = `translateY(${(offset * progress).toFixed(3)}em) scaleY(${(1 + Math.abs(offset) * progress * .18).toFixed(3)})`;
