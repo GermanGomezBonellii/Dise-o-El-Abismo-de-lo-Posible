@@ -1,22 +1,24 @@
 # Diseño: El abismo de lo posible
 
-Sitio estático experimental para acompañar el ensayo de Germán Gómez Bonelli.
+Sitio estático experimental que transforma el ensayo de Germán Gómez Bonelli en una segunda lectura espacial.
+
+La experiencia se mantiene deliberadamente monocromática: el negro es el campo común y cada capítulo cambia su forma de lectura. La portada funciona como umbral; el encuadre revela la limitación del framing; una trayectoria desplaza la idea de máximo local; una grilla hace visible la estructura; y el cierre convierte al sitio en uno de los proyectos del propio ensayo.
 
 ## Estructura
 
 - `index.html`: contenido y estructura semántica.
-- `css/style.css`: sistema editorial, diseño adaptable y preferencias de movimiento reducido.
-- `js/main.js`: interacción de encuadre y exploración periférica.
+- `css/style.css`: sistema editorial monocromo, composición adaptable y preferencias de movimiento reducido.
+- `js/main.js`: transición de portada, revelados al recorrer el sitio y encuadre accesible.
+- `assets/fragment.svg`: composición abstracta propia para la sección de framing.
+- `assets/img/foto_de_chico.png`: archivo personal desplegable en la introducción mediante un tratamiento monocromo de alto contraste.
 
 No usa dependencias ni proceso de compilación. Para verlo localmente, abrí `index.html` en un navegador.
 
 ## Publicar en GitHub Pages
 
-1. Crear un repositorio nuevo en GitHub, por ejemplo `el-abismo-de-lo-posible`.
-2. Subir a la raíz de ese repositorio el contenido de esta carpeta, manteniendo `index.html`, `css/`, `js/` y este archivo.
-3. En el repositorio, abrir **Settings** → **Pages**.
-4. En **Build and deployment**, elegir **Deploy from a branch**.
-5. Elegir la rama `main` y la carpeta `/(root)`, y guardar.
-6. Esperar la publicación: GitHub mostrará la URL pública en esa misma pantalla.
+1. En el repositorio de GitHub, abrir **Settings** → **Pages**.
+2. En **Build and deployment**, elegir **Deploy from a branch**.
+3. Elegir la rama `main` y la carpeta `/(root)`, y guardar.
+4. Esperar la publicación: GitHub mostrará la URL pública en esa misma pantalla.
 
 Al actualizar los archivos y subir los cambios a `main`, GitHub Pages volverá a publicar el sitio automáticamente.
