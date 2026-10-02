@@ -10,6 +10,7 @@
   const summitMarkers = [...document.querySelectorAll('.summit-marker')];
   const archive = document.querySelector('.archive');
   const archiveTrigger = document.querySelector('.archive-trigger');
+  const ending = document.querySelector('.ending');
 
   const updateCover = () => cover.classList.toggle('is-past', window.scrollY > 32);
   updateCover();
@@ -65,6 +66,22 @@
       archiveTrigger.focus();
     }
   });
+
+  if (ending) {
+    const updateEnding = () => {
+      if (reduceMotion) {
+        ending.dataset.stage = '4';
+        return;
+      }
+      const rect = ending.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (window.innerHeight * .82 - rect.top) / (window.innerHeight * .76)));
+      const stage = progress < .15 ? 0 : progress < .36 ? 1 : progress < .57 ? 2 : progress < .79 ? 3 : 4;
+      ending.dataset.stage = String(stage);
+    };
+    updateEnding();
+    window.addEventListener('scroll', updateEnding, { passive: true });
+    window.addEventListener('resize', updateEnding);
+  }
 
   if (terrainPath && explorerDot) {
     const length = terrainPath.getTotalLength();
