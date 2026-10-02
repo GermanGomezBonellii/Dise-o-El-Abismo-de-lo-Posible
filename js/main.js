@@ -12,6 +12,7 @@
   const explorerDot = document.querySelector('.explorer-dot');
   const summitMarkers = [...document.querySelectorAll('.summit-marker')];
   const ending = document.querySelector('.ending');
+  const closingSphere = document.querySelector('.closing-sphere');
 
   const updateCover = () => cover.classList.toggle('is-past', window.scrollY > 32);
   updateCover();
@@ -63,6 +64,102 @@
     updateEnding();
     window.addEventListener('scroll', updateEnding, { passive: true });
     window.addEventListener('resize', updateEnding);
+  }
+
+  if (closingSphere) {
+    const context = closingSphere.getContext('2d');
+    let angle = .42;
+    let frameId = null;
+    let isVisible = false;
+
+    const resizeSphere = () => {
+      const rect = closingSphere.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.max(1, Math.round(rect.width * ratio));
+      const height = Math.max(1, Math.round(rect.height * ratio));
+      if (closingSphere.width !== width || closingSphere.height !== height) {
+        closingSphere.width = width;
+        closingSphere.height = height;
+      }
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return rect;
+    };
+
+    const drawSphere = () => {
+      const rect = resizeSphere();
+      const width = rect.width;
+      const height = rect.height;
+      const centerX = width * .5;
+      const centerY = height * .5;
+      const radius = Math.min(width, height) * .43;
+      const yaw = angle;
+      const pitch = -.16;
+      context.clearRect(0, 0, width, height);
+      context.lineWidth = 1;
+      context.lineCap = 'round';
+
+      const project = (x, y, z) => {
+        const rotatedX = x * Math.cos(yaw) - z * Math.sin(yaw);
+        const rotatedZ = x * Math.sin(yaw) + z * Math.cos(yaw);
+        const rotatedY = y * Math.cos(pitch) - rotatedZ * Math.sin(pitch);
+        const depth = y * Math.sin(pitch) + rotatedZ * Math.cos(pitch);
+        const perspective = 1 / (1 - depth * .25);
+        return [centerX + rotatedX * radius * perspective, centerY + rotatedY * radius * perspective, depth];
+      };
+
+      const stroke = (points, alpha) => {
+        context.beginPath();
+        points.forEach((point, index) => {
+          if (index === 0) context.moveTo(point[0], point[1]);
+          else context.lineTo(point[0], point[1]);
+        });
+        context.strokeStyle = `rgba(244,243,239,${alpha})`;
+        context.stroke();
+      };
+
+      [-1.16, -.86, -.53, -.18, .18, .53, .86, 1.16].forEach((latitude) => {
+        const points = [];
+        for (let step = 0; step <= 42; step += 1) {
+          const longitude = step / 42 * Math.PI * 2;
+          const radiusAtLatitude = Math.cos(latitude);
+          points.push(project(radiusAtLatitude * Math.cos(longitude), Math.sin(latitude), radiusAtLatitude * Math.sin(longitude)));
+        }
+        stroke(points, .34);
+      });
+
+      for (let meridian = 0; meridian < 12; meridian += 1) {
+        const points = [];
+        const longitude = meridian / 12 * Math.PI * 2;
+        for (let step = 0; step <= 32; step += 1) {
+          const latitude = -Math.PI / 2 + step / 32 * Math.PI;
+          points.push(project(Math.cos(latitude) * Math.cos(longitude), Math.sin(latitude), Math.cos(latitude) * Math.sin(longitude)));
+        }
+        stroke(points, meridian % 3 === 0 ? .48 : .27);
+      }
+    };
+
+    const renderSphere = () => {
+      frameId = null;
+      if (!isVisible) return;
+      drawSphere();
+      if (!reduceMotion) {
+        angle += .0022;
+        frameId = window.requestAnimationFrame(renderSphere);
+      }
+    };
+
+    const sphereObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (!isVisible && frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+        frameId = null;
+      }
+      if (isVisible && frameId === null) renderSphere();
+    }, { threshold: 0 });
+    sphereObserver.observe(closingSphere);
+    window.addEventListener('resize', () => {
+      if (isVisible) drawSphere();
+    });
   }
 
   if (transformWord) {
