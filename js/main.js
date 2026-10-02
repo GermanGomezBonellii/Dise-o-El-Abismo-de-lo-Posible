@@ -1,6 +1,7 @@
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cover = document.querySelector('.cover');
+  const possibleTrigger = document.querySelector('.cover-possible');
   const framing = document.querySelector('.framing');
   const frame = document.querySelector('.frame-window');
   const maximum = document.querySelector('.maximum');
@@ -15,6 +16,14 @@
   const updateCover = () => cover.classList.toggle('is-past', window.scrollY > 32);
   updateCover();
   window.addEventListener('scroll', updateCover, { passive: true });
+
+  if (possibleTrigger) {
+    possibleTrigger.addEventListener('click', () => {
+      if (cover.classList.contains('is-fallen')) return;
+      cover.classList.add('is-fallen');
+      possibleTrigger.disabled = true;
+    });
+  }
 
   const reveal = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
