@@ -10,7 +10,6 @@ La experiencia se mantiene deliberadamente monocromática: el negro es el campo 
 - `css/style.css`: sistema editorial monocromo, composición adaptable y preferencias de movimiento reducido.
 - `js/main.js`: transición de portada, revelados al recorrer el sitio y encuadre accesible.
 - `assets/fragment.svg`: composición abstracta propia para la sección de framing.
-- `assets/img/foto_de_chico.png`: archivo personal desplegable en la introducción mediante un tratamiento monocromo de alto contraste.
 
 No usa dependencias ni proceso de compilación. Para verlo localmente, abrí `index.html` en un navegador.
 

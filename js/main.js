@@ -10,8 +10,6 @@
   const terrainPath = document.querySelector('.terrain-path');
   const explorerDot = document.querySelector('.explorer-dot');
   const summitMarkers = [...document.querySelectorAll('.summit-marker')];
-  const archive = document.querySelector('.archive');
-  const archiveTrigger = document.querySelector('.archive-trigger');
   const ending = document.querySelector('.ending');
 
   const updateCover = () => cover.classList.toggle('is-past', window.scrollY > 32);
@@ -39,33 +37,6 @@
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       changeFrame();
-    }
-  });
-
-  const setArchive = (open) => {
-    archive.classList.toggle('is-open', open);
-    archiveTrigger.setAttribute('aria-expanded', String(open));
-  };
-
-  const hoverCapable = window.matchMedia('(hover: hover)').matches;
-  if (hoverCapable) {
-    archive.addEventListener('pointerenter', () => setArchive(true));
-    archive.addEventListener('pointerleave', () => setArchive(false));
-    archiveTrigger.addEventListener('focus', () => setArchive(true));
-    archiveTrigger.addEventListener('blur', () => setArchive(false));
-  }
-
-  archiveTrigger.addEventListener('click', (event) => {
-    event.stopPropagation();
-    setArchive(!archive.classList.contains('is-open'));
-  });
-  document.addEventListener('click', (event) => {
-    if (!archive.contains(event.target)) setArchive(false);
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      setArchive(false);
-      archiveTrigger.focus();
     }
   });
 
